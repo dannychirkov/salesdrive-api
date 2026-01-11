@@ -20,6 +20,12 @@ export interface ServerConfig {
    * Log level
    */
   logLevel: 'debug' | 'info' | 'warn' | 'error';
+
+  /**
+   * Read-only mode - disables all write operations
+   * When true, only list/get tools are available
+   */
+  readOnly: boolean;
 }
 
 /**
@@ -29,6 +35,8 @@ export function loadConfig(): ServerConfig {
   const apiKey = process.env.SALESDRIVE_API_KEY;
   const baseUrl = process.env.SALESDRIVE_BASE_URL;
   const logLevel = (process.env.LOG_LEVEL || 'info') as ServerConfig['logLevel'];
+  const readOnly =
+    process.env.SALESDRIVE_READ_ONLY === 'true' || process.env.SALESDRIVE_READ_ONLY === '1';
 
   if (!apiKey) {
     throw new Error('SALESDRIVE_API_KEY environment variable is required');
@@ -42,6 +50,7 @@ export function loadConfig(): ServerConfig {
     apiKey,
     baseUrl,
     logLevel,
+    readOnly,
   };
 }
 

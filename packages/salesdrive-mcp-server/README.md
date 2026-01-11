@@ -47,11 +47,40 @@ Then configure:
 
 ## Configuration
 
-| Environment Variable  | Description                                         | Required           |
-| --------------------- | --------------------------------------------------- | ------------------ |
-| `SALESDRIVE_API_KEY`  | Your SalesDrive API key                             | Yes                |
-| `SALESDRIVE_BASE_URL` | Your account URL (e.g., https://demo.salesdrive.me) | Yes                |
-| `LOG_LEVEL`           | Logging level (debug, info, warn, error)            | No (default: info) |
+| Environment Variable   | Description                                         | Required            |
+| ---------------------- | --------------------------------------------------- | ------------------- |
+| `SALESDRIVE_API_KEY`   | Your SalesDrive API key                             | Yes                 |
+| `SALESDRIVE_BASE_URL`  | Your account URL (e.g., https://demo.salesdrive.me) | Yes                 |
+| `SALESDRIVE_READ_ONLY` | Set to `true` to disable write operations           | No (default: false) |
+| `LOG_LEVEL`            | Logging level (debug, info, warn, error)            | No (default: info)  |
+
+### Read-Only Mode
+
+For safety, you can run the server in read-only mode. This disables all write operations:
+
+```json
+{
+  "mcpServers": {
+    "salesdrive": {
+      "command": "npx",
+      "args": ["-y", "@dannychirkov/salesdrive-mcp-server"],
+      "env": {
+        "SALESDRIVE_API_KEY": "your-api-key",
+        "SALESDRIVE_BASE_URL": "https://your-account.salesdrive.me",
+        "SALESDRIVE_READ_ONLY": "true"
+      }
+    }
+  }
+}
+```
+
+In read-only mode, the following tools are disabled:
+
+- `order_create`, `order_update`
+- `product_update`, `product_delete`
+- `payment_add`
+- `currency_update`
+- `category_update`, `category_delete`
 
 ### Getting Your API Key
 

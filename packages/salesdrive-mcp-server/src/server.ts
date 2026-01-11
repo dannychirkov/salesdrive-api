@@ -5,6 +5,7 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
+import type { Tool } from '@modelcontextprotocol/sdk/types.js';
 import {
   createClient,
   orderService,
@@ -54,9 +55,23 @@ import {
 } from './tools/index.js';
 
 /**
+ * Write tool names that should be filtered out in read-only mode
+ */
+const WRITE_TOOLS = new Set([
+  'order_create',
+  'order_update',
+  'product_update',
+  'product_delete',
+  'payment_add',
+  'currency_update',
+  'category_update',
+  'category_delete',
+]);
+
+/**
  * All available tools
  */
-const ALL_TOOLS = [
+const ALL_TOOLS: Tool[] = [
   ...orderTools,
   ...productTools,
   ...paymentTools,
@@ -73,6 +88,16 @@ const ALL_TOOLS = [
 ];
 
 /**
+ * Get tools filtered by read-only mode
+ */
+function getAvailableTools(readOnly: boolean): Tool[] {
+  if (!readOnly) {
+    return ALL_TOOLS;
+  }
+  return ALL_TOOLS.filter((tool) => !WRITE_TOOLS.has(tool.name));
+}
+
+/**
  * Create the SalesDrive MCP Server
  */
 export function createServer(config: ServerConfig) {
@@ -81,6 +106,13 @@ export function createServer(config: ServerConfig) {
 
   // Set log level
   setLogLevel(config.logLevel);
+
+  // Get available tools based on read-only mode
+  const availableTools = getAvailableTools(config.readOnly);
+
+  if (config.readOnly) {
+    logger.info('Running in READ-ONLY mode - write operations disabled');
+  }
 
   // Create transport and client
   const transport = createFetchTransport({
@@ -123,13 +155,26 @@ export function createServer(config: ServerConfig) {
   // Handle list tools request
   server.setRequestHandler(ListToolsRequestSchema, async () => {
     logger.debug('Listing tools');
-    return { tools: ALL_TOOLS };
+    return { tools: availableTools };
   });
 
   // Handle tool calls
   server.setRequestHandler(CallToolRequestSchema, async (request) => {
     const { name, arguments: args = {} } = request.params;
     logger.info(`Tool called: ${name}`, args);
+
+    // Block write tools in read-only mode
+    if (config.readOnly && WRITE_TOOLS.has(name)) {
+      return {
+        isError: true,
+        content: [
+          {
+            type: 'text',
+            text: `Tool "${name}" is not available in read-only mode. Set SALESDRIVE_READ_ONLY=false to enable write operations.`,
+          },
+        ],
+      };
+    }
 
     // Route to appropriate handler
     if (name.startsWith('order_')) {
@@ -209,6 +254,9 @@ export async function runServer() {
 
     logger.info('Starting SalesDrive MCP Server...');
     logger.info(`Base URL: ${config.baseUrl}`);
+    if (config.readOnly) {
+      logger.info('Mode: READ-ONLY');
+    }
 
     await server.connect(transport);
 
