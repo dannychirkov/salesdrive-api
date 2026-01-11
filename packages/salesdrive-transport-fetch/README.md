@@ -71,6 +71,32 @@ const transport = createFetchTransportWithRetry(
 );
 ```
 
+### SalesDrive Rate Limits
+
+SalesDrive API has the following rate limits:
+
+- **10 requests per minute**
+- **100 requests per hour**
+- **1000 requests per 24 hours**
+
+When limits are exceeded, the API returns HTTP 400 with message `"API limit reached. Please try again later."` (not standard 429). This transport handles both cases automatically.
+
+**Recommended retry config for SalesDrive:**
+
+```typescript
+const transport = createFetchTransportWithRetry(
+  {
+    apiKey: 'your-api-key',
+    baseUrl: 'https://demo.salesdrive.me',
+  },
+  {
+    maxRetries: 3,
+    retryDelay: 60000, // Wait 60 seconds (full minute window)
+    retryMultiplier: 1, // Don't increase delay, just wait another minute
+  }
+);
+```
+
 ## Custom Fetch Implementation
 
 ```typescript

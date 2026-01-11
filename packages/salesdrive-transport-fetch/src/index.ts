@@ -103,7 +103,9 @@ export function createFetchTransport(config: FetchTransportConfig): TransportFun
 
     // Build URL with query params for GET requests
     const url =
-      method === 'GET' ? buildUrl(baseUrl, endpoint, params) : new URL(endpoint, baseUrl).toString();
+      method === 'GET'
+        ? buildUrl(baseUrl, endpoint, params)
+        : new URL(endpoint, baseUrl).toString();
 
     // Set up abort controller for timeout
     const abortController = new AbortController();
@@ -155,6 +157,13 @@ export function createFetchTransport(config: FetchTransportConfig): TransportFun
         }
 
         if (response.status === 429) {
+          const error = new Error(errorMessage) as Error & { name: string };
+          error.name = 'RateLimitError';
+          throw error;
+        }
+
+        // Handle SalesDrive's non-standard rate limit response (400 with "limit" in message)
+        if (response.status === 400 && errorMessage.toLowerCase().includes('limit')) {
           const error = new Error(errorMessage) as Error & { name: string };
           error.name = 'RateLimitError';
           throw error;
