@@ -6,11 +6,11 @@ TypeScript client and MCP server for [SalesDrive CRM](https://salesdrive.ua) API
 
 ## Packages
 
-| Package | Description | NPM |
-|---------|-------------|-----|
-| [@dannychirkov/salesdrive-api-client](packages/salesdrive-api-client) | TypeScript API client | [![npm](https://img.shields.io/npm/v/@dannychirkov/salesdrive-api-client)](https://www.npmjs.com/package/@dannychirkov/salesdrive-api-client) |
-| [@dannychirkov/salesdrive-transport-fetch](packages/salesdrive-transport-fetch) | Fetch-based HTTP transport | [![npm](https://img.shields.io/npm/v/@dannychirkov/salesdrive-transport-fetch)](https://www.npmjs.com/package/@dannychirkov/salesdrive-transport-fetch) |
-| [@dannychirkov/salesdrive-mcp-server](packages/salesdrive-mcp-server) | MCP server for AI assistants | [![npm](https://img.shields.io/npm/v/@dannychirkov/salesdrive-mcp-server)](https://www.npmjs.com/package/@dannychirkov/salesdrive-mcp-server) |
+| Package                                                                         | Description                  | NPM                                                                                                                                                     |
+| ------------------------------------------------------------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [@dannychirkov/salesdrive-api-client](packages/salesdrive-api-client)           | TypeScript API client        | [![npm](https://img.shields.io/npm/v/@dannychirkov/salesdrive-api-client)](https://www.npmjs.com/package/@dannychirkov/salesdrive-api-client)           |
+| [@dannychirkov/salesdrive-transport-fetch](packages/salesdrive-transport-fetch) | Fetch-based HTTP transport   | [![npm](https://img.shields.io/npm/v/@dannychirkov/salesdrive-transport-fetch)](https://www.npmjs.com/package/@dannychirkov/salesdrive-transport-fetch) |
+| [@dannychirkov/salesdrive-mcp-server](packages/salesdrive-mcp-server)           | MCP server for AI assistants | [![npm](https://img.shields.io/npm/v/@dannychirkov/salesdrive-mcp-server)](https://www.npmjs.com/package/@dannychirkov/salesdrive-mcp-server)           |
 
 ## Quick Start
 
@@ -67,6 +67,7 @@ Add to your Claude Desktop configuration (`~/.config/claude/mcp.json` or equival
 ```
 
 Now you can ask Claude:
+
 - "Show me the last 10 orders"
 - "Create a new order for customer John Doe"
 - "What payment methods are available?"
@@ -82,38 +83,38 @@ Now you can ask Claude:
 
 ## API Coverage
 
-| Feature | Client | MCP |
-|---------|--------|-----|
-| Orders (create, update, list) | ✅ | ✅ |
-| Products (update, delete) | ✅ | ✅ |
-| Categories | ✅ | - |
-| Payments (add, list) | ✅ | ✅ |
-| Payment Methods | ✅ | ✅ |
-| Delivery Methods | ✅ | ✅ |
-| Order Statuses | ✅ | ✅ |
-| Currency Rates | ✅ | ✅ |
-| Invoices | ✅ | - |
-| Sales Invoices | ✅ | - |
-| Cash Orders | ✅ | - |
-| Contracts | ✅ | - |
-| Checks (Fiscal) | ✅ | - |
-| Acts | ✅ | - |
-| Product Arrivals | ✅ | - |
+| Feature                       | Client | MCP |
+| ----------------------------- | ------ | --- |
+| Orders (create, update, list) | ✅     | ✅  |
+| Products (update, delete)     | ✅     | ✅  |
+| Categories (update, delete)   | ✅     | ✅  |
+| Payments (add, list)          | ✅     | ✅  |
+| Payment Methods               | ✅     | ✅  |
+| Delivery Methods              | ✅     | ✅  |
+| Order Statuses                | ✅     | ✅  |
+| Currency Rates                | ✅     | ✅  |
+| Invoices                      | ✅     | ✅  |
+| Sales Invoices                | ✅     | ✅  |
+| Cash Orders                   | ✅     | ✅  |
+| Contracts                     | ✅     | ✅  |
+| Checks (Fiscal)               | ✅     | ✅  |
+| Acts                          | ✅     | ✅  |
+| Product Arrivals              | ✅     | ✅  |
 
 ## Development
 
 ```bash
 # Install dependencies
-yarn install
+npm install
 
 # Build all packages
-yarn build
+npm run build --workspaces
 
 # Run tests
-yarn test
+npm test --workspaces
 
 # Type check
-yarn type-check
+npm run type-check --workspaces
 ```
 
 ## License

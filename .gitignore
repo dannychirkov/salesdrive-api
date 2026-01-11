@@ -46,3 +46,9 @@ yarn-error.log*
 # Misc
 *.bak
 *.tmp
+
+# Internal documentation (not for public repo)
+API.md
+SALESDRIVE_PROJECT_PLAN.md
+IMPLEMENTATION_PROMPT.md
+raw-swagger.html

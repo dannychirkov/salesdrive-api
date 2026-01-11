@@ -4,10 +4,7 @@
 
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import {
-  CallToolRequestSchema,
-  ListToolsRequestSchema,
-} from '@modelcontextprotocol/sdk/types.js';
+import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import {
   createClient,
   orderService,
@@ -15,6 +12,14 @@ import {
   paymentService,
   referenceService,
   currencyService,
+  categoryService,
+  invoiceService,
+  salesInvoiceService,
+  cashOrderService,
+  contractService,
+  checkService,
+  actService,
+  arrivalService,
 } from '@dannychirkov/salesdrive-api-client';
 import { createFetchTransport } from '@dannychirkov/salesdrive-transport-fetch';
 import { loadConfig, validateConfig, type ServerConfig } from './config.js';
@@ -28,12 +33,44 @@ import {
   handlePaymentTool,
   referenceTools,
   handleReferenceTool,
+  currencyTools,
+  handleCurrencyTool,
+  categoryTools,
+  handleCategoryTool,
+  invoiceTools,
+  handleInvoiceTool,
+  salesInvoiceTools,
+  handleSalesInvoiceTool,
+  cashOrderTools,
+  handleCashOrderTool,
+  contractTools,
+  handleContractTool,
+  checkTools,
+  handleCheckTool,
+  actTools,
+  handleActTool,
+  arrivalTools,
+  handleArrivalTool,
 } from './tools/index.js';
 
 /**
  * All available tools
  */
-const ALL_TOOLS = [...orderTools, ...productTools, ...paymentTools, ...referenceTools];
+const ALL_TOOLS = [
+  ...orderTools,
+  ...productTools,
+  ...paymentTools,
+  ...referenceTools,
+  ...currencyTools,
+  ...categoryTools,
+  ...invoiceTools,
+  ...salesInvoiceTools,
+  ...cashOrderTools,
+  ...contractTools,
+  ...checkTools,
+  ...actTools,
+  ...arrivalTools,
+];
 
 /**
  * Create the SalesDrive MCP Server
@@ -60,7 +97,15 @@ export function createServer(config: ServerConfig) {
     .extend(productService)
     .extend(paymentService)
     .extend(referenceService)
-    .extend(currencyService);
+    .extend(currencyService)
+    .extend(categoryService)
+    .extend(invoiceService)
+    .extend(salesInvoiceService)
+    .extend(cashOrderService)
+    .extend(contractService)
+    .extend(checkService)
+    .extend(actService)
+    .extend(arrivalService);
 
   // Create MCP server
   const server = new Server(
@@ -99,8 +144,44 @@ export function createServer(config: ServerConfig) {
       return handlePaymentTool(name, args as Record<string, unknown>, client);
     }
 
-    if (name.startsWith('reference_') || name.startsWith('currency_')) {
+    if (name.startsWith('reference_')) {
       return handleReferenceTool(name, args as Record<string, unknown>, client);
+    }
+
+    if (name.startsWith('currency_')) {
+      return handleCurrencyTool(name, args as Record<string, unknown>, client);
+    }
+
+    if (name.startsWith('category_')) {
+      return handleCategoryTool(name, args as Record<string, unknown>, client);
+    }
+
+    if (name.startsWith('invoice_')) {
+      return handleInvoiceTool(name, args as Record<string, unknown>, client);
+    }
+
+    if (name.startsWith('sales_invoice_')) {
+      return handleSalesInvoiceTool(name, args as Record<string, unknown>, client);
+    }
+
+    if (name.startsWith('cash_order_')) {
+      return handleCashOrderTool(name, args as Record<string, unknown>, client);
+    }
+
+    if (name.startsWith('contract_')) {
+      return handleContractTool(name, args as Record<string, unknown>, client);
+    }
+
+    if (name.startsWith('check_')) {
+      return handleCheckTool(name, args as Record<string, unknown>, client);
+    }
+
+    if (name.startsWith('act_')) {
+      return handleActTool(name, args as Record<string, unknown>, client);
+    }
+
+    if (name.startsWith('arrival_')) {
+      return handleArrivalTool(name, args as Record<string, unknown>, client);
     }
 
     return {
