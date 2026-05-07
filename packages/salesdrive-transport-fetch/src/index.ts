@@ -12,6 +12,12 @@ import type {
   TransportFunction,
   SalesDriveResponse,
 } from '@dannychirkov/salesdrive-api-client';
+import {
+  ApiError,
+  AuthenticationError,
+  NetworkError,
+  RateLimitError,
+} from '@dannychirkov/salesdrive-api-client';
 
 /**
  * Configuration for the fetch transport
@@ -151,28 +157,19 @@ export function createFetchTransport(config: FetchTransportConfig): TransportFun
         }
 
         if (response.status === 401) {
-          const error = new Error(errorMessage) as Error & { name: string };
-          error.name = 'AuthenticationError';
-          throw error;
+          throw new AuthenticationError(errorMessage);
         }
 
         if (response.status === 429) {
-          const error = new Error(errorMessage) as Error & { name: string };
-          error.name = 'RateLimitError';
-          throw error;
+          throw new RateLimitError(errorMessage);
         }
 
         // Handle SalesDrive's non-standard rate limit response (400 with "limit" in message)
         if (response.status === 400 && errorMessage.toLowerCase().includes('limit')) {
-          const error = new Error(errorMessage) as Error & { name: string };
-          error.name = 'RateLimitError';
-          throw error;
+          throw new RateLimitError(errorMessage);
         }
 
-        const error = new Error(errorMessage) as Error & { name: string; statusCode: number };
-        error.name = 'ApiError';
-        error.statusCode = response.status;
-        throw error;
+        throw new ApiError(errorMessage, response.status, errorBody);
       }
 
       const data = (await response.json()) as SalesDriveResponse<T>;
@@ -187,28 +184,20 @@ export function createFetchTransport(config: FetchTransportConfig): TransportFun
       if (error instanceof Error) {
         // Re-throw our custom errors
         if (
-          error.name === 'AuthenticationError' ||
-          error.name === 'RateLimitError' ||
-          error.name === 'ApiError'
+          error instanceof AuthenticationError ||
+          error instanceof RateLimitError ||
+          error instanceof ApiError
         ) {
           throw error;
         }
 
         // Handle abort/timeout
         if (error.name === 'AbortError') {
-          const timeoutError = new Error('Request timeout') as Error & { name: string };
-          timeoutError.name = 'NetworkError';
-          throw timeoutError;
+          throw new NetworkError('Request timeout', error);
         }
 
         // Wrap network errors
-        const networkError = new Error(`Network error: ${error.message}`) as Error & {
-          name: string;
-          cause: Error;
-        };
-        networkError.name = 'NetworkError';
-        networkError.cause = error;
-        throw networkError;
+        throw new NetworkError(`Network error: ${error.message}`, error);
       }
 
       throw error;

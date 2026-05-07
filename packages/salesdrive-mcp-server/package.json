@@ -1,6 +1,6 @@
 {
   "name": "@dannychirkov/salesdrive-mcp-server",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "MCP server for SalesDrive CRM API - enables AI assistants to manage orders, products, and payments",
   "main": "dist/server.js",
   "types": "dist/server.d.ts",
@@ -33,14 +33,14 @@
     "build": "tsc",
     "start": "node dist/cli/index.js",
     "dev": "ts-node src/cli/index.ts",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "type-check": "tsc --noEmit",
-    "clean": "rimraf dist"
+    "clean": "rimraf dist tsconfig.tsbuildinfo"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.0",
-    "@dannychirkov/salesdrive-api-client": "*",
-    "@dannychirkov/salesdrive-transport-fetch": "*"
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "@dannychirkov/salesdrive-api-client": "^0.1.1",
+    "@dannychirkov/salesdrive-transport-fetch": "^0.1.2"
   },
   "devDependencies": {
     "typescript": "^5.3.0",

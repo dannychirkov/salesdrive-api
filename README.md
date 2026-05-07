@@ -108,13 +108,16 @@ Now you can ask Claude:
 npm install
 
 # Build all packages
-npm run build --workspaces
+npm run build
 
 # Run tests
-npm test --workspaces
+npm test
 
 # Type check
-npm run type-check --workspaces
+npm run type-check
+
+# Clean generated build artifacts
+npm run clean
 ```
 
 ## License

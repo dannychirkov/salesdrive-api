@@ -1,6 +1,6 @@
 {
   "name": "@dannychirkov/salesdrive-api-client",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "TypeScript API client for SalesDrive CRM",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -30,7 +30,7 @@
     "test": "jest",
     "test:integration": "jest --testPathPattern=integration",
     "type-check": "tsc --noEmit",
-    "clean": "rimraf dist"
+    "clean": "rimraf dist tsconfig.tsbuildinfo"
   },
   "devDependencies": {
     "typescript": "^5.3.0",

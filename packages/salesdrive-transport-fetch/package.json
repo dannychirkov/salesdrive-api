@@ -1,6 +1,6 @@
 {
   "name": "@dannychirkov/salesdrive-transport-fetch",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Fetch-based HTTP transport for SalesDrive API client",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -26,15 +26,15 @@
   ],
   "scripts": {
     "build": "tsc",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "type-check": "tsc --noEmit",
-    "clean": "rimraf dist"
+    "clean": "rimraf dist tsconfig.tsbuildinfo"
   },
   "peerDependencies": {
-    "@dannychirkov/salesdrive-api-client": "*"
+    "@dannychirkov/salesdrive-api-client": "^0.1.1"
   },
   "devDependencies": {
-    "@dannychirkov/salesdrive-api-client": "*",
+    "@dannychirkov/salesdrive-api-client": "^0.1.1",
     "typescript": "^5.3.0",
     "@types/node": "^20.10.0",
     "jest": "^29.7.0",

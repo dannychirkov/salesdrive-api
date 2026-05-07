@@ -34,36 +34,6 @@ export const referenceTools: Tool[] = [
       properties: {},
     },
   },
-  {
-    name: 'currency_get',
-    description: 'Get current currency exchange rates from SalesDrive',
-    inputSchema: {
-      type: 'object',
-      properties: {},
-    },
-  },
-  {
-    name: 'currency_update',
-    description: 'Update currency exchange rates in SalesDrive',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        currencies: {
-          type: 'array',
-          description: 'Currency rates to update',
-          items: {
-            type: 'object',
-            properties: {
-              code: { type: 'string', description: 'Currency code (e.g., USD, EUR)' },
-              rate: { type: 'number', description: 'Exchange rate' },
-            },
-            required: ['code', 'rate'],
-          },
-        },
-      },
-      required: ['currencies'],
-    },
-  },
 ];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -94,17 +64,6 @@ export async function handleReferenceTool(
       case 'reference_get_statuses': {
         const result = await client.reference.getStatuses();
         return formatSuccess(result.data);
-      }
-
-      case 'currency_get': {
-        const result = await client.currencies.get();
-        return formatSuccess(result);
-      }
-
-      case 'currency_update': {
-        const currencies = args.currencies as Array<{ code: string; rate: number }>;
-        const result = await client.currencies.update({ currencies });
-        return formatSuccess(result);
       }
 
       default:
